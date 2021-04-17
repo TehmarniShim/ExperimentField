@@ -13,6 +13,18 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="WOB">
+      <UniqueIdentifier>{a499e3ae-ce31-4fc4-b3a6-d915daa36028}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Vector2D">
+      <UniqueIdentifier>{0723d913-9c1e-4f2e-a964-b75ff9738b7a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Biograph">
+      <UniqueIdentifier>{dfa628ad-fced-4b57-92da-a2a21ebe332e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="WinMain">
+      <UniqueIdentifier>{533208d3-b6f9-4280-a3af-b954f18cc3f6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -25,13 +37,14 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="WorldOfBiograph.h">
-      <Filter>Header Files</Filter>
+      <Filter>WOB</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="WorldOfBiograph.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
+    <ClInclude Include="Vector2D.h">
+      <Filter>Vector2D</Filter>
+    </ClInclude>
+    <ClInclude Include="BioGraph.h">
+      <Filter>Biograph</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="WorldOfBiograph.rc">
@@ -45,5 +58,19 @@
     <Image Include="WorldOfBiograph.ico">
       <Filter>Resource Files</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="WorldOfBiograph.cpp">
+      <Filter>WOB</Filter>
+    </ClCompile>
+    <ClCompile Include="Vector2D.cpp">
+      <Filter>Vector2D</Filter>
+    </ClCompile>
+    <ClCompile Include="BioGraph.cpp">
+      <Filter>Biograph</Filter>
+    </ClCompile>
+    <ClCompile Include="WinMain.cpp">
+      <Filter>WinMain</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

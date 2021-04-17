@@ -1,5 +1,4 @@
 #pragma once
-#include "BioGraph.h"
 #include "framework.h"
 
 class BioGraph;

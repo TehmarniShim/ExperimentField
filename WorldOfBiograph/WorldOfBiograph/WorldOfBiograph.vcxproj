@@ -142,8 +142,10 @@
   <ItemGroup>
     <ClInclude Include="BioGraph.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="Genes.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="typedef.h" />
     <ClInclude Include="Vector2D.h" />
     <ClInclude Include="WorldOfBiograph.h" />
   </ItemGroup>

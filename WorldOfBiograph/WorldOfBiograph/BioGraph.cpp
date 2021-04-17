@@ -3,7 +3,7 @@
 
 
 
-size_t GetBranchCount(BioLine* bioLine)
+size_t GetBranchValue(BioLine* bioLine)
 {
 	if (bioLine->pParent == bioLine)
 	{
@@ -22,19 +22,23 @@ size_t GetBranchCount(BioLine* bioLine)
 	}
 }
 BioGraph::BioGraph(const float fRootPosX, const float fRootPosY, const float fLength)
-	: mRootElement(nullptr)
-	, mfThetaInDegree(5.0f)
-	, mnBranchCount(8)
+	: mpRootElement(nullptr)
+	, mfThetaInDegree(30.0f)
+	, mnBranchCount(4)
+	, mnEvenAngleValue(0)
+	, mnOddAngleValue(0)
+	, mnEvenLengthValue(0)
+	, mnOddLengthValue(0)
 {
-	mRootElement = new BioLine();
-	mRootElement->V2Position.fX = fRootPosX;
-	mRootElement->V2Position.fY = fRootPosY;
-	mRootElement->fLength = fLength;
-	mRootElement->V2Direction.fX = 0.0f;
-	mRootElement->V2Direction.fY = -1.0f;
-	mRootElement->pLeft = nullptr;
-	mRootElement->pRight = nullptr;
-	mRootElement->pParent = mRootElement;
+	mpRootElement = new BioLine();
+	mpRootElement->V2Position.fX = fRootPosX;
+	mpRootElement->V2Position.fY = fRootPosY;
+	mpRootElement->fLength = fLength;
+	mpRootElement->V2Direction.fX = 0.0f;
+	mpRootElement->V2Direction.fY = -1.0f;
+	mpRootElement->pLeft = nullptr;
+	mpRootElement->pRight = nullptr;
+	mpRootElement->pParent = mpRootElement;
 }
 
 void RecursiveRelease(BioLine* target)
@@ -53,9 +57,9 @@ void RecursiveRelease(BioLine* target)
 
 BioGraph::~BioGraph()
 {
-	if (nullptr != mRootElement)
+	if (nullptr != mpRootElement)
 	{
-		RecursiveRelease(mRootElement);
+		RecursiveRelease(mpRootElement);
 	}
 }
 
@@ -63,44 +67,67 @@ BioGraph::~BioGraph()
 
 void BioGraph::MakeGraph()
 {
-	assert(nullptr != mRootElement);
-	if (nullptr == mRootElement->pLeft)
+	assert(nullptr != mpRootElement);
+	if (nullptr == mpRootElement->pLeft)
 	{
-		recursiveMakeBioLine(&mRootElement->pLeft, mRootElement, NodeDirection::LEFT);
+		recursiveMakeBioLine(&mpRootElement->pLeft, mpRootElement, eNodeDirection::LEFT);
 	}
-	if (nullptr == mRootElement->pRight)
+	if (nullptr == mpRootElement->pRight)
 	{
-		recursiveMakeBioLine(&mRootElement->pRight, mRootElement, NodeDirection::RIGHT);
+		recursiveMakeBioLine(&mpRootElement->pRight, mpRootElement, eNodeDirection::RIGHT);
 	}
 }
 
 VecBio BioGraph::GetBioGraph() const
 {
 	VecBio VBioLines;
-	recursiveCollectBioLines(VBioLines, mRootElement);
+	recursiveCollectBioLines(VBioLines, mpRootElement);
 	return VBioLines;
 }
 
 void BioGraph::RelocateGraph(const size_t XPos, const size_t YPos) const
 {
-	assert(nullptr != mRootElement);
-	const float fCurrentXPos = mRootElement->V2Position.fX;
-	const float fCurrentYPos = mRootElement->V2Position.fY;
+	assert(nullptr != mpRootElement);
+	const float fCurrentXPos = mpRootElement->V2Position.fX;
+	const float fCurrentYPos = mpRootElement->V2Position.fY;
 	const float fRelocateX = static_cast<float>(XPos);
 	const float fRelocateY = static_cast<float>(YPos);
 	const float fSettleValueX = fRelocateX - fCurrentXPos;
 	const float fSettleValueY = fRelocateY - fCurrentYPos;
-	recursiveRelocateGraph(mRootElement, fSettleValueX, fSettleValueY);
+	recursiveRelocateGraph(mpRootElement, fSettleValueX, fSettleValueY);
+}
+
+void BioGraph::MakeChange(eGenes eGeneKind)
+{
+	switch (eGeneKind)
+	{
+	case eGenes::ADD_ANGLE_EVEN_BRANCH:
+		break;
+	case eGenes::ADD_ANGLE_ODD_BRANCH:
+		break;
+	case eGenes::SUBTRACT_ANGLE_EVEN_BRANCH:
+		break;
+	case eGenes::SUBTRACT_ANGLE_ODD_BRANCH:
+		break;
+	case eGenes::ADD_LENGTH_EVEN_BIO:
+		break;
+	case eGenes::ADD_LENGTH_ODD_BIO:
+		break;
+	case eGenes::SUBTRACT_LENGTH_EVEN_BIO:
+		break;
+	case eGenes::SUBTRACT_LENGTH_ODD_BIO:
+		break;
+	default:
+		break;
+	}
 }
 
 
-
-
-void BioGraph::recursiveMakeBioLine(BioLine** ppBranch, BioLine* pNewParent, NodeDirection eDirection)
+void BioGraph::recursiveMakeBioLine(BioLine** ppBranch, BioLine* pNewParent, eNodeDirection eDirection)
 {
 	assert(pNewParent != nullptr);
 	assert(*ppBranch == nullptr);
-	size_t nCurrentBranchCount = GetBranchCount(pNewParent);
+	size_t nCurrentBranchCount = GetBranchValue(pNewParent);
 	if (nCurrentBranchCount < mnBranchCount)
 	{
 		*ppBranch = new BioLine();
@@ -118,7 +145,7 @@ void BioGraph::recursiveMakeBioLine(BioLine** ppBranch, BioLine* pNewParent, Nod
 		DirectX::XMStoreFloat2(&F2Angle, VAngle);
 		float fAngleInDegree = DirectX::XMConvertToDegrees(F2Angle.x);
 		VParentDirection.Normalize();
-		if (eDirection == NodeDirection::LEFT)
+		if (eDirection == eNodeDirection::LEFT)
 		{
 			(*ppBranch)->V2Direction = VParentDirection.RotateVector(mfThetaInDegree);
 		}
@@ -127,8 +154,8 @@ void BioGraph::recursiveMakeBioLine(BioLine** ppBranch, BioLine* pNewParent, Nod
 			(*ppBranch)->V2Direction = VParentDirection.RotateVector(-mfThetaInDegree);
 		}
 		(*ppBranch)->fLength = pNewParent->fLength * 0.8f;
-		recursiveMakeBioLine(&(*ppBranch)->pLeft, *ppBranch, NodeDirection::LEFT);
-		recursiveMakeBioLine(&(*ppBranch)->pRight, *ppBranch, NodeDirection::RIGHT);
+		recursiveMakeBioLine(&(*ppBranch)->pLeft, *ppBranch, eNodeDirection::LEFT);
+		recursiveMakeBioLine(&(*ppBranch)->pRight, *ppBranch, eNodeDirection::RIGHT);
 	}
 }
 
@@ -161,3 +188,36 @@ void BioGraph::recursiveRelocateGraph(BioLine* pLine, const float fSettleXValue,
 	}
 }
 
+void BioGraph::recursiveRenewGraph(BioLine* pLine, const float fEvenAngleValue, const float fOddAngleValue, const float fEvenLengthValue, const float fOddLengthValue) const
+{
+	assert(nullptr != pLine);
+	size_t nBranchValue = GetBranchValue(pLine);
+	auto& V2Direction = pLine->V2Direction;
+	BioLine*& pParent = pLine->pParent;
+	if (nBranchValue % 2)  //It means it is odd branch number 
+	{
+		pLine->fLength += fOddLengthValue;
+		if (pLine == pParent->pLeft)  //If the target node is the left node of the parent node, mathematically we need to 'add' angle in order rotate left
+		{
+			V2Direction.RotateVector(fOddAngleValue);
+		}
+		else
+		{
+			V2Direction.RotateVector(-fOddAngleValue);
+		}
+	}
+	else
+	{
+		pLine->fLength += fEvenLengthValue;
+		if (nBranchValue)  
+		{
+				
+		}
+		  //if branch value is zero, just change the length value
+		
+
+		
+
+	}
+
+}

@@ -9,10 +9,11 @@
 
 //struct BioLine;
 typedef eastl::vector<BioLine*> VecBio;
-//enum class NodeDirection;
+//typedef std::vector<BioLine*> VecBio;
+//enum class eNodeDirection;
 
 //
-//enum class NodeDirection
+//enum class eNodeDirection
 //{
 //	RIGHT,
 //	LEFT
@@ -32,15 +33,22 @@ public:
 	void MakeGraph();
 	VecBio GetBioGraph() const;
 	void RelocateGraph(const size_t width, const size_t height) const;
+	void MakeChange(eGenes eGeneKind);
 	
 private:
-	void recursiveMakeBioLine(BioLine ** ppBranch, BioLine* pParent, NodeDirection eDirection);
+	void recursiveMakeBioLine(BioLine ** ppBranch, BioLine* pParent, eNodeDirection eDirection);
 	void recursiveCollectBioLines(VecBio& VBioLines, BioLine* bio) const;
 	void recursiveRelocateGraph(BioLine* pLine, const float Xcomponent, const float Ycomponent) const;
+	void recursiveRenewGraph(BioLine* pLine) const;
+	void renewGraph() const;
 
 private:
-	BioLine* mRootElement;
+	BioLine* mpRootElement;
 	float mfThetaInDegree;
 	size_t mnBranchCount;
+	size_t mnEvenAngleValue;
+	size_t mnOddAngleValue;
+	size_t mnEvenLengthValue;
+	size_t mnOddLengthValue;
 	
 };

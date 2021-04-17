@@ -15,7 +15,7 @@ struct BioLine
 };
 
 
-enum class NodeDirection
+enum class eNodeDirection
 {
 	RIGHT,
 	LEFT

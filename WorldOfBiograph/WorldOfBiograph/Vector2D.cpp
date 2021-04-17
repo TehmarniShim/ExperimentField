@@ -107,15 +107,15 @@ Quodrant GetQuodrantInfoNonVector(float fAngle)
 	{
 		fAngle -= 360.0f;
 	}
-	if (fAngle >= 0 && fAngle < 90.0f)
+	if (fAngle < 90.0f)
 	{
 		return Quodrant::ONE;
 	}
-	else if (fAngle >= 90.0f && fAngle < 180.0f)
+	else if (fAngle < 180.0f)
 	{
 		return Quodrant::TWO;
 	}
-	else if (fAngle >= 180.0f && fAngle < 270.0f)
+	else if (fAngle < 270.0f)
 	{
 		return Quodrant::THREE;
 	}

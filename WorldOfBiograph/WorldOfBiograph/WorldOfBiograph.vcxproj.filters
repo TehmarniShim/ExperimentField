@@ -45,6 +45,12 @@
     <ClInclude Include="BioGraph.h">
       <Filter>Biograph</Filter>
     </ClInclude>
+    <ClInclude Include="typedef.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Genes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="WorldOfBiograph.rc">

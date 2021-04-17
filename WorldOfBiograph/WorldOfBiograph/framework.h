@@ -25,6 +25,7 @@
 #include "Resource.h"
 #include "BioGraph.h"
 #include "Vector2D.h"
+#include "typedef.h"
 
 
 template<class Interface>

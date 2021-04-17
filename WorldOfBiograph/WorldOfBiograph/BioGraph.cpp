@@ -80,6 +80,7 @@ void BioGraph::MakeGraph()
 
 VecBio BioGraph::GetBioGraph() const
 {
+	assert(nullptr != mpRootElement);
 	VecBio VBioLines;
 	recursiveCollectBioLines(VBioLines, mpRootElement);
 	return VBioLines;
@@ -102,24 +103,45 @@ void BioGraph::MakeChange(eGenes eGeneKind)
 	switch (eGeneKind)
 	{
 	case eGenes::ADD_ANGLE_EVEN_BRANCH:
+		mnEvenAngleValue++;
+
 		break;
 	case eGenes::ADD_ANGLE_ODD_BRANCH:
+		mnOddAngleValue++;
 		break;
 	case eGenes::SUBTRACT_ANGLE_EVEN_BRANCH:
+		mnEvenAngleValue--;
+
 		break;
 	case eGenes::SUBTRACT_ANGLE_ODD_BRANCH:
+		mnOddAngleValue--;
+
 		break;
 	case eGenes::ADD_LENGTH_EVEN_BIO:
+		mnEvenLengthValue++;
+
 		break;
 	case eGenes::ADD_LENGTH_ODD_BIO:
+		mnOddLengthValue++;
+
 		break;
 	case eGenes::SUBTRACT_LENGTH_EVEN_BIO:
+		mnEvenLengthValue--;
 		break;
 	case eGenes::SUBTRACT_LENGTH_ODD_BIO:
+		mnOddLengthValue--;
+
 		break;
 	default:
 		break;
 	}
+	constexpr float fAngleCoefficient = 5.0f;
+	constexpr float fLengthCoefficient = 10.0f;
+	const float fEvenAngleValue = fAngleCoefficient * static_cast<float>(mnEvenAngleValue);
+	const float fOddAngleValue =  fAngleCoefficient * static_cast<float>(mnOddAngleValue);
+	const float fEvenLengthValue = fLengthCoefficient * static_cast<float>(mnEvenLengthValue);
+	const float fOddLengthValue = fLengthCoefficient * static_cast<float>(mnOddLengthValue);
+	recursiveRenewGraph(mpRootElement, fEvenAngleValue, fOddAngleValue, fEvenLengthValue, fOddLengthValue);
 }
 
 
@@ -192,12 +214,21 @@ void BioGraph::recursiveRenewGraph(BioLine* pLine, const float fEvenAngleValue, 
 {
 	assert(nullptr != pLine);
 	size_t nBranchValue = GetBranchValue(pLine);
-	auto& V2Direction = pLine->V2Direction;
+	Vector2D& V2Direction = pLine->V2Direction;
 	BioLine*& pParent = pLine->pParent;
+	Vector2D& V2RenewdParentDirection = pParent->V2Direction;
+	if (nBranchValue)
+	{
+		assert(pLine->pParent != pLine);
+		const float fRenewedParentLength = pParent->fLength;
+		Vector2D V2RenewedAddingVector = V2RenewdParentDirection * fRenewedParentLength;
+		pLine->V2Position = pParent->V2Position + V2RenewedAddingVector;
+	}
+
 	if (nBranchValue % 2)  //It means it is odd branch number 
 	{
 		pLine->fLength += fOddLengthValue;
-		if (pLine == pParent->pLeft)  //If the target node is the left node of the parent node, mathematically we need to 'add' angle in order rotate left
+		if (pLine == pParent->pLeft)  //If the target is the left node of the parent node, mathematically we need to 'add' angle in order rotate left
 		{
 			V2Direction.RotateVector(fOddAngleValue);
 		}
@@ -211,13 +242,22 @@ void BioGraph::recursiveRenewGraph(BioLine* pLine, const float fEvenAngleValue, 
 		pLine->fLength += fEvenLengthValue;
 		if (nBranchValue)  
 		{
-				
+			if (pLine == pParent->pLeft)
+			{
+				V2Direction.RotateVector(fEvenAngleValue);
+			}
+			else
+			{
+				V2Direction.RotateVector(-fEvenAngleValue);
+			}
 		}
-		  //if branch value is zero, just change the length value
-		
-
-		
-
 	}
-
+	if (nullptr != pLine->pLeft)
+	{
+		recursiveRenewGraph(pLine->pLeft, fEvenAngleValue, fOddAngleValue, fEvenLengthValue, fOddLengthValue);
+	}
+	if (nullptr != pLine->pRight)
+	{
+		recursiveRenewGraph(pLine->pLeft, fEvenAngleValue, fOddAngleValue, fEvenLengthValue, fOddLengthValue);
+	}
 }

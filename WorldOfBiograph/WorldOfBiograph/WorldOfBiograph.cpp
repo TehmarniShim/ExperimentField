@@ -9,6 +9,10 @@ WorldOfBiograph::WorldOfBiograph()
     , m_pRenderTarget(NULL)
     , mpBioGraph()
 {
+    for (auto& pBio : mpBioGraph)
+    {
+        pBio = nullptr;
+    }
     
 }
 
@@ -201,6 +205,7 @@ HRESULT WorldOfBiograph::OnRender()
 
         for (size_t i = 0; i < GENES_COUNT; i++)
         {
+            assert(nullptr != mpBioGraph[i]);
             VecBio VBioLines = mpBioGraph[i]->GetBioGraph();
             size_t nGraphSize = VBioLines.size();
             for (auto& bioLine : VBioLines)
@@ -286,6 +291,8 @@ LRESULT CALLBACK WorldOfBiograph::WndProc(HWND hwnd, UINT message, WPARAM wParam
 {
     LRESULT result = 0;
 
+    
+
     if (message == WM_CREATE)
     {
         LPCREATESTRUCT pcs = (LPCREATESTRUCT)lParam;
@@ -347,6 +354,31 @@ LRESULT CALLBACK WorldOfBiograph::WndProc(HWND hwnd, UINT message, WPARAM wParam
             result = 1;
             wasHandled = true;
             break;
+
+            case WM_KEYDOWN:
+            {
+                switch (wParam)
+                {
+                case 0x41: //A
+                    pDemoApp->mpBioGraph[0]->MakeChange(eGenes::ADD_ANGLE_EVEN_BRANCH);
+                    break;
+
+                case 0x42: //B
+                    pDemoApp->mpBioGraph[0]->MakeChange(eGenes::SUBTRACT_ANGLE_EVEN_BRANCH);
+                    break;
+
+                case 0x43:  //C
+                    pDemoApp->mpBioGraph[0]->MakeChange(eGenes::SUBTRACT_LENGTH_EVEN_BIO);
+                    break;
+
+
+                default:
+                    break;
+                }
+                pDemoApp->OnRender();
+                wasHandled = true;
+            }
+
             }
         }
 
@@ -367,7 +399,6 @@ void WorldOfBiograph::OnResize(UINT width, UINT height)
         // the next time EndDraw is called.
         m_pRenderTarget->Resize(D2D1::SizeU(width, height));
         mpBioGraph[0]->RelocateGraph(width/2 , height/2);
-        
     }
 
 }

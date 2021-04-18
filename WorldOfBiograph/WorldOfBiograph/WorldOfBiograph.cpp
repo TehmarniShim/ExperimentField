@@ -198,7 +198,7 @@ HRESULT WorldOfBiograph::OnRender()
         D2D1_SIZE_F rtSize = m_pRenderTarget->GetSize();
 
         // Draw a grid background.
-        const int width = static_cast<int>(rtSize.width);
+        const int width = static_cast<int>(rtSize.width-80.0f);
         const int height = static_cast<int>(rtSize.height);
         //const float fStrokSize = 10.0f;
 
@@ -361,21 +361,29 @@ LRESULT CALLBACK WorldOfBiograph::WndProc(HWND hwnd, UINT message, WPARAM wParam
                 {
                 case 0x41: //A
                     pDemoApp->mpBioGraph[0]->MakeChange(eGenes::ADD_ANGLE_EVEN_BRANCH);
+                    pDemoApp->OnRender();
+
                     break;
 
-                case 0x42: //B
+                case 0x53: //S
                     pDemoApp->mpBioGraph[0]->MakeChange(eGenes::SUBTRACT_ANGLE_EVEN_BRANCH);
+                    pDemoApp->OnRender();
+
                     break;
 
-                case 0x43:  //C
+                case 0x44:  //D
                     pDemoApp->mpBioGraph[0]->MakeChange(eGenes::SUBTRACT_LENGTH_EVEN_BIO);
+                    pDemoApp->OnRender();
+
                     break;
+
+                    
 
 
                 default:
                     break;
                 }
-                pDemoApp->OnRender();
+                //pDemoApp->OnRender();
                 wasHandled = true;
             }
 

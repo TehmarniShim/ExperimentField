@@ -108,6 +108,7 @@ void BioGraph::MakeChange(eGenes eGeneKind)
 		break;
 	case eGenes::ADD_ANGLE_ODD_BRANCH:
 		mnOddAngleValue++;
+
 		break;
 	case eGenes::SUBTRACT_ANGLE_EVEN_BRANCH:
 		mnEvenAngleValue--;
@@ -127,6 +128,7 @@ void BioGraph::MakeChange(eGenes eGeneKind)
 		break;
 	case eGenes::SUBTRACT_LENGTH_EVEN_BIO:
 		mnEvenLengthValue--;
+
 		break;
 	case eGenes::SUBTRACT_LENGTH_ODD_BIO:
 		mnOddLengthValue--;
@@ -137,10 +139,65 @@ void BioGraph::MakeChange(eGenes eGeneKind)
 	}
 	constexpr float fAngleCoefficient = 5.0f;
 	constexpr float fLengthCoefficient = 10.0f;
-	const float fEvenAngleValue = fAngleCoefficient * static_cast<float>(mnEvenAngleValue);
-	const float fOddAngleValue =  fAngleCoefficient * static_cast<float>(mnOddAngleValue);
-	const float fEvenLengthValue = fLengthCoefficient * static_cast<float>(mnEvenLengthValue);
-	const float fOddLengthValue = fLengthCoefficient * static_cast<float>(mnOddLengthValue);
+	float fEvenAngleValue = fAngleCoefficient * static_cast<float>(mnEvenAngleValue);
+	float fOddAngleValue = fAngleCoefficient * static_cast<float>(mnOddAngleValue);
+	float fEvenLengthValue = fLengthCoefficient * static_cast<float>(mnEvenLengthValue);
+	float fOddLengthValue = fLengthCoefficient * static_cast<float>(mnOddLengthValue);
+	//eGenes eIndex = eGeneKind;
+	switch (eGeneKind)
+	{
+	case eGenes::ADD_ANGLE_EVEN_BRANCH:
+		if (!mnEvenAngleValue)
+		{
+			fEvenAngleValue += fAngleCoefficient;
+		}
+		break;
+	case eGenes::ADD_ANGLE_ODD_BRANCH:
+		if (!mnOddAngleValue)
+		{
+			fOddAngleValue += fAngleCoefficient;
+		}
+		break;
+	case eGenes::SUBTRACT_ANGLE_EVEN_BRANCH:
+		if (!mnEvenAngleValue)
+		{
+			fEvenAngleValue -= fAngleCoefficient;
+		}
+		break;
+	case eGenes::SUBTRACT_ANGLE_ODD_BRANCH:
+		if (!mnOddAngleValue)
+		{
+			fOddAngleValue -= fAngleCoefficient;
+		}
+		break;
+	case eGenes::ADD_LENGTH_EVEN_BIO:
+		if (!mnEvenLengthValue)
+		{
+			fEvenLengthValue += fLengthCoefficient;
+		}
+		break;
+	case eGenes::ADD_LENGTH_ODD_BIO:
+		if (!mnOddLengthValue)
+		{
+			fOddLengthValue += fLengthCoefficient;
+		}
+		break;
+	case eGenes::SUBTRACT_LENGTH_EVEN_BIO:
+		if (!mnEvenLengthValue)
+		{
+			fEvenLengthValue -= fLengthCoefficient;
+		}
+		break;
+	case eGenes::SUBTRACT_LENGTH_ODD_BIO:
+		if (!mnOddLengthValue)
+		{
+			fOddLengthValue -= fLengthCoefficient;
+		}
+		break;
+	default:
+		break;
+	}
+
 	recursiveRenewGraph(mpRootElement, fEvenAngleValue, fOddAngleValue, fEvenLengthValue, fOddLengthValue);
 }
 
@@ -219,6 +276,8 @@ void BioGraph::recursiveRenewGraph(BioLine* pLine, const float fEvenAngleValue, 
 	Vector2D& V2RenewdParentDirection = pParent->V2Direction;
 	if (nBranchValue)
 	{
+		/*while (true)
+		{*/
 		assert(pLine->pParent != pLine);
 		const float fRenewedParentLength = pParent->fLength;
 		Vector2D V2RenewedAddingVector = V2RenewdParentDirection * fRenewedParentLength;
@@ -227,29 +286,45 @@ void BioGraph::recursiveRenewGraph(BioLine* pLine, const float fEvenAngleValue, 
 
 	if (nBranchValue % 2)  //It means it is odd branch number 
 	{
-		pLine->fLength += fOddLengthValue;
-		if (pLine == pParent->pLeft)  //If the target is the left node of the parent node, mathematically we need to 'add' angle in order rotate left
+		
+		if (fOddLengthValue != 0.0f)  //If the value is zero, there does not have to any changes
 		{
-			V2Direction.RotateVector(fOddAngleValue);
+			pLine->fLength += fOddLengthValue;
 		}
-		else
+
+		if (fOddAngleValue != 0.0f)
 		{
-			V2Direction.RotateVector(-fOddAngleValue);
+			if (pLine == pParent->pLeft)  //If the target is the left node of the parent node, mathematically we need to 'add' angle in order rotate left
+			{
+				V2Direction = V2Direction.RotateVector(fOddAngleValue);
+			}
+			else
+			{
+				V2Direction = V2Direction.RotateVector(-fOddAngleValue);
+			}
 		}
 	}
 	else
 	{
-		pLine->fLength += fEvenLengthValue;
-		if (nBranchValue)  
+		
+		if (fEvenLengthValue != 0.0f)
 		{
-			if (pLine == pParent->pLeft)
+			pLine->fLength += fEvenLengthValue;
+		}
+		if (fEvenAngleValue != 0.0f)
+		{
+			if (nBranchValue)
 			{
-				V2Direction.RotateVector(fEvenAngleValue);
+				if (pLine == pParent->pLeft)
+				{
+					V2Direction = V2Direction.RotateVector(fEvenAngleValue);
+				}
+				else
+				{
+					V2Direction = V2Direction.RotateVector(-fEvenAngleValue);
+				}
 			}
-			else
-			{
-				V2Direction.RotateVector(-fEvenAngleValue);
-			}
+
 		}
 	}
 	if (nullptr != pLine->pLeft)

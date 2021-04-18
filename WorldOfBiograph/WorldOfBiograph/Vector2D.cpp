@@ -35,7 +35,7 @@ Vector2D Vector2D::RotateVector(const float degree)
 
 	//Let's change the conditions that degree here is just between Zero to Pi
 	using namespace DirectX;
-	Vector2D result{};
+Vector2D result{};
 	Vector2D VMathDirection = Vector2D{ this->fX, -this->fY };
 	Quodrant QuodrantInfo = VMathDirection.GetQuodrantInfo();
 	XMVECTOR XMVMathDirection{ VMathDirection.fX, VMathDirection.fY };

@@ -20,13 +20,19 @@
 #include <d2d1helper.h>
 #include <dwrite.h>
 #include <wincodec.h>
+#include <vector>
+#include <cassert>
+#include <EASTL/vector.h>
 
 // project specific header files
+#include "TehmarniEAStlHeader.h"
 #include "Resource.h"
 #include "BioGraph.h"
 #include "Vector2D.h"
+#include "WorldOfBiograph.h"
 #include "typedef.h"
-
+#include "BioLine.h"
+#include "Genes.h"
 
 template<class Interface>
 inline void SafeRelease(

@@ -22,13 +22,13 @@ WorldOfBiograph::~WorldOfBiograph()
     SafeRelease(&m_pDirect2dFactory);
     SafeRelease(&m_pLightSlateGrayBrush);
     SafeRelease(&m_pRenderTarget);
-    /*for (auto& i : mpBioGraph)
+    for (auto& i : mpBioGraph)
     {
         if (nullptr != i)
         {
         delete i;
         }
-    }*/
+    }
     
 }
 
@@ -357,35 +357,50 @@ LRESULT CALLBACK WorldOfBiograph::WndProc(HWND hwnd, UINT message, WPARAM wParam
 
             case WM_KEYDOWN:
             {
+                eGenes eMutation;
                 switch (wParam)
                 {
                 case 0x41: //A
-                    pDemoApp->mpBioGraph[0]->MakeChange(eGenes::ADD_ANGLE_EVEN_BRANCH);
-                    pDemoApp->OnRender();
-
+                    eMutation = eGenes::ADD_ANGLE_EVEN_BRANCH;
                     break;
-
+                    
                 case 0x53: //S
-                    pDemoApp->mpBioGraph[0]->MakeChange(eGenes::SUBTRACT_ANGLE_EVEN_BRANCH);
-                    pDemoApp->OnRender();
-
+                    eMutation = eGenes::SUBTRACT_ANGLE_EVEN_BRANCH;
                     break;
 
                 case 0x44:  //D
-                    pDemoApp->mpBioGraph[0]->MakeChange(eGenes::SUBTRACT_LENGTH_EVEN_BIO);
-                    pDemoApp->OnRender();
-
+                    eMutation = eGenes::ADD_ANGLE_ODD_BRANCH;
                     break;
 
-                    
-
-
-                default:
+                case 0x46: //F
+                    eMutation = eGenes::SUBTRACT_ANGLE_ODD_BRANCH;
                     break;
-                }
-                //pDemoApp->OnRender();
-                wasHandled = true;
-            }
+
+                case 0x5A: //Z
+                    eMutation = eGenes::ADD_LENGTH_EVEN_BIO;
+                    break;
+
+                case 0x58: //X
+                    eMutation = eGenes::SUBTRACT_LENGTH_EVEN_BIO;
+                    break;
+
+                case 0x43: //C
+                    eMutation = eGenes::ADD_LENGTH_ODD_BIO;
+                    break;
+
+                case 0x56: //V
+					eMutation = eGenes::SUBTRACT_LENGTH_ODD_BIO;
+					break;
+
+				default:
+					eMutation = eGenes::DEFAULT;
+					break;
+				}
+				pDemoApp->mpBioGraph[0]->MakeChange(eMutation);
+				pDemoApp->OnRender();
+				wasHandled = true;
+				result = 0;
+			}
 
             }
         }
@@ -406,7 +421,7 @@ void WorldOfBiograph::OnResize(UINT width, UINT height)
         // error here, because the error will be returned again
         // the next time EndDraw is called.
         m_pRenderTarget->Resize(D2D1::SizeU(width, height));
-        mpBioGraph[0]->RelocateGraph(width/2 , height/2);
+        mpBioGraph[0]->RelocateGraph(width/2 , height / 2 + 150);
     }
 
 }

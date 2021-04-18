@@ -141,6 +141,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="BioGraph.h" />
+    <ClInclude Include="BioLine.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Genes.h" />
     <ClInclude Include="Resource.h" />

@@ -25,6 +25,9 @@
     <Filter Include="WinMain">
       <UniqueIdentifier>{533208d3-b6f9-4280-a3af-b954f18cc3f6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="BioLine">
+      <UniqueIdentifier>{ee402ac7-c081-4336-b280-0b35c9edd712}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -50,6 +53,9 @@
     </ClInclude>
     <ClInclude Include="Genes.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BioLine.h">
+      <Filter>BioLine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

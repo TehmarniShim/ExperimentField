@@ -56,8 +56,8 @@ private:
 	//void recursiveRenewGraph(BioLine* pLine, const float fEvenAngleValue, const float fOddAngleValue, const float fEvenLengthValue, const float fOddLengthValue) const;
 	//void recursiveRenewGraph(const float fChangeValue, const eGenes eMutation);
 
-	void recursiveRotateAngle(BioLine* pLine, const float fDegree, const eODDEVEN eOddEvenFlag);
-	void recursiveExtendLine(BioLine* pLine, const float fLengthValue, const eODDEVEN eOddEvenFlag);
+	void recursiveRotateAngle(BioLine* pLine, const float fDegree, const eODDEVEN eOddEvenFlag) const;
+	void recursiveExtendLine(BioLine* pLine, const float fLengthValue, const eODDEVEN eOddEvenFlag) const;
 
 	
 	

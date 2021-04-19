@@ -306,7 +306,7 @@ void BioGraph::recursiveRelocateGraph(BioLine* pLine, const float fSettleXValue,
 	}
 }
 
-void BioGraph::recursiveRotateAngle(BioLine* pLine, const float fDegree, const eODDEVEN eOddEvenFlag)
+void BioGraph::recursiveRotateAngle(BioLine* pLine, const float fDegree, const eODDEVEN eOddEvenFlag) const
 {
 	size_t nBranchCount = pLine->GetBranchValue();
 	if (nBranchCount)
@@ -316,19 +316,7 @@ void BioGraph::recursiveRotateAngle(BioLine* pLine, const float fDegree, const e
 		if (nParentBranchCount)
 		{
 			pLine->RenewPosition();
-			
-			/*if (eOddEvenFlag == eODDEVEN::ODD && nParentBranchCount % 2)
-			{
-				pLine->RenewPosition();
-			}
-			else if (eOddEvenFlag == eODDEVEN::EVEN && !(nParentBranchCount % 2))
-			{
-				pLine->RenewPosition();
-			}*/
 		}
-
-
-
 		if (eOddEvenFlag == eODDEVEN::ODD && nBranchCount % 2)
 		{
 			Vector2D& V2LineDirection = pLine->V2Direction;
@@ -365,10 +353,36 @@ void BioGraph::recursiveRotateAngle(BioLine* pLine, const float fDegree, const e
 	return;
 }
 
-void BioGraph::recursiveExtendLine(BioLine* pLine, const float fLengthValue, const eODDEVEN eOddEvenFlag)
+void BioGraph::recursiveExtendLine(BioLine* pLine, const float fLengthValue, const eODDEVEN eOddEvenFlag) const
 {
+	size_t nBranchCount = pLine->GetBranchValue();
+	if (nBranchCount)
+	{
+		pLine->RenewPosition();
+	}
+	if (eOddEvenFlag == eODDEVEN::EVEN && !(nBranchCount % 2))
+	{
+		pLine->fLength += fLengthValue;
+	}
+	
+	else if (eOddEvenFlag == eODDEVEN::ODD && nBranchCount % 2)
+	{
+		pLine->fLength += fLengthValue;
+	}
+	if (nullptr != pLine->pLeft)
+	{
+		recursiveExtendLine(pLine->pLeft, fLengthValue, eOddEvenFlag);
+	}
+	if (nullptr != pLine->pRight)
+	{
+		recursiveExtendLine(pLine->pRight, fLengthValue, eOddEvenFlag);
+	}
+
+	//if(eODDEVEN::EVEN == eOddEvenFlag && nBranchCount)
 	return;
 }
+
+
 
 
 

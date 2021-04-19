@@ -17,9 +17,9 @@ class Vector2D
 
 public:
 	void Normalize();
-	Vector2D operator+(const Vector2D& rhs);
-	Vector2D operator*(const float fFactor);
-	Vector2D RotateVector(const float degree);
+	Vector2D operator+(const Vector2D& rhs) const;
+	Vector2D operator*(const float fFactor) const;
+	Vector2D RotateVector(const float fDegree) const;
 	Quodrant GetQuodrantInfo() const;
 
 

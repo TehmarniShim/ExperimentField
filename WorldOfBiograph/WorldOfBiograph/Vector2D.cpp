@@ -12,7 +12,7 @@ void Vector2D::Normalize()
 	fY /= fLength;
 }
 
-Vector2D Vector2D::operator+(const Vector2D& rhs)
+Vector2D Vector2D::operator+(const Vector2D& rhs) const
 {
 	Vector2D result{};
 	
@@ -21,7 +21,7 @@ Vector2D Vector2D::operator+(const Vector2D& rhs)
 	return result;
 }
 
-Vector2D Vector2D::operator*(const float fFactor)
+Vector2D Vector2D::operator*(const float fFactor) const
 {
 	Vector2D result{};
 	
@@ -30,10 +30,10 @@ Vector2D Vector2D::operator*(const float fFactor)
 	return result;
 }
 
-Vector2D Vector2D::RotateVector(const float degree)
+Vector2D Vector2D::RotateVector(const float fDegree) const
 {
 
-	//Let's change the conditions that degree here is just between Zero to Pi
+	//Let's change the conditions that fDegree here is just between Zero to Pi
 	using namespace DirectX;
 Vector2D result{};
 	Vector2D VMathDirection = Vector2D{ this->fX, -this->fY };
@@ -70,7 +70,7 @@ Vector2D result{};
 		break;
 	}
 	
-	float fAngleAfterRotationInDegree = fAngleBeforeRotationInDegree + degree;
+	float fAngleAfterRotationInDegree = fAngleBeforeRotationInDegree + fDegree;
 	float fAngleAfterRotationInRadian = XMConvertToRadians(fAngleAfterRotationInDegree);
 	result.fX = std::cosf(fAngleAfterRotationInRadian);
 	result.fY = -std::sinf(fAngleAfterRotationInRadian);

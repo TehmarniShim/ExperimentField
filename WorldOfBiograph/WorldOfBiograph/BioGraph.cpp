@@ -102,104 +102,140 @@ void BioGraph::RelocateGraph(const size_t XPos, const size_t YPos) const
 
 void BioGraph::MakeChange(eGenes eMutation)
 {
+	constexpr float fAngleCoefficient = 5.0f;
+	constexpr float fLengthCoefficient = 10.0f;
+	eODDEVEN eOddEvenFlag;
+	float fChangeValue;
+	bool bIsAngleRotation;
 	switch (eMutation)
 	{
 	case eGenes::ADD_ANGLE_EVEN_BRANCH:
-		mnEvenAngleValue++;
-
+		//mnEvenAngleValue++;
+		fChangeValue = fAngleCoefficient;
+		eOddEvenFlag = eODDEVEN::EVEN;
+		bIsAngleRotation = true;
 		break;
 	case eGenes::ADD_ANGLE_ODD_BRANCH:
-		mnOddAngleValue++;
-
+		//mnOddAngleValue++;
+		//fChangeValue = f
+		fChangeValue = fAngleCoefficient;
+		eOddEvenFlag = eODDEVEN::ODD;
+		bIsAngleRotation = true;
 		break;
 	case eGenes::SUBTRACT_ANGLE_EVEN_BRANCH:
-		mnEvenAngleValue--;
-
+		//mnEvenAngleValue--;
+		fChangeValue = -fAngleCoefficient;
+		eOddEvenFlag = eODDEVEN::EVEN;
+		bIsAngleRotation = true;
 		break;
 	case eGenes::SUBTRACT_ANGLE_ODD_BRANCH:
-		mnOddAngleValue--;
-
+		//mnOddAngleValue--;
+		fChangeValue = -fAngleCoefficient;
+		eOddEvenFlag = eODDEVEN::ODD;
+		bIsAngleRotation = true;
 		break;
 	case eGenes::ADD_LENGTH_EVEN_BIO:
-		mnEvenLengthValue++;
+		//mnEvenLengthValue++;
+		fChangeValue = fLengthCoefficient;
+		eOddEvenFlag = eODDEVEN::EVEN;
+		bIsAngleRotation = false;
 
 		break;
 	case eGenes::ADD_LENGTH_ODD_BIO:
-		mnOddLengthValue++;
+		//mnOddLengthValue++;
+		fChangeValue = fLengthCoefficient;
+		eOddEvenFlag = eODDEVEN::ODD;
+		bIsAngleRotation = false;
+
 
 		break;
 	case eGenes::SUBTRACT_LENGTH_EVEN_BIO:
-		mnEvenLengthValue--;
+		//mnEvenLengthValue--;
+		fChangeValue = -fLengthCoefficient;
+		eOddEvenFlag = eODDEVEN::EVEN;
+		bIsAngleRotation = false;
 
 		break;
 	case eGenes::SUBTRACT_LENGTH_ODD_BIO:
-		mnOddLengthValue--;
+		//mnOddLengthValue--;
+		fChangeValue = -fLengthCoefficient;
+		eOddEvenFlag = eODDEVEN::ODD;
+		bIsAngleRotation = false;
 
 		break;
 	
 	default:
 		return;
 	}
-	constexpr float fAngleCoefficient = 5.0f;
-	constexpr float fLengthCoefficient = 10.0f;
-	float fEvenAngleValue = fAngleCoefficient * static_cast<float>(mnEvenAngleValue);
-	float fOddAngleValue = fAngleCoefficient * static_cast<float>(mnOddAngleValue);
-	float fEvenLengthValue = fLengthCoefficient * static_cast<float>(mnEvenLengthValue);
-	float fOddLengthValue = fLengthCoefficient * static_cast<float>(mnOddLengthValue);
-	//eGenes eIndex = eMutation;
-	switch (eMutation)
+	if (bIsAngleRotation)
 	{
-	case eGenes::ADD_ANGLE_EVEN_BRANCH:
-		if (!mnEvenAngleValue)
-		{
-			fEvenAngleValue += fAngleCoefficient;
-		}
-		break;
-	case eGenes::ADD_ANGLE_ODD_BRANCH:
-		if (!mnOddAngleValue)
-		{
-			fOddAngleValue += fAngleCoefficient;
-		}
-		break;
-	case eGenes::SUBTRACT_ANGLE_EVEN_BRANCH:
-		if (!mnEvenAngleValue)
-		{
-			fEvenAngleValue -= fAngleCoefficient;
-		}
-		break;
-	case eGenes::SUBTRACT_ANGLE_ODD_BRANCH:
-		if (!mnOddAngleValue)
-		{
-			fOddAngleValue -= fAngleCoefficient;
-		}
-		break;
-	case eGenes::ADD_LENGTH_EVEN_BIO:
-		if (!mnEvenLengthValue)
-		{
-			fEvenLengthValue += fLengthCoefficient;
-		}
-		break;
-	case eGenes::ADD_LENGTH_ODD_BIO:
-		if (!mnOddLengthValue)
-		{
-			fOddLengthValue += fLengthCoefficient;
-		}
-		break;
-	case eGenes::SUBTRACT_LENGTH_EVEN_BIO:
-		if (!mnEvenLengthValue)
-		{
-			fEvenLengthValue -= fLengthCoefficient;
-		}
-		break;
-	case eGenes::SUBTRACT_LENGTH_ODD_BIO:
-		if (!mnOddLengthValue)
-		{
-			fOddLengthValue -= fLengthCoefficient;
-		}
-		break;
-	default:
-		break;
+		recursiveRotateAngle(mpRootElement, fChangeValue, eOddEvenFlag);
 	}
+	else
+	{
+		recursiveExtendLine(mpRootElement, fChangeValue, eOddEvenFlag);
+	}
+	return;
+	/*constexpr float fAngleCoefficient = 5.0f;
+	constexpr float fLengthCoefficient = 10.0f;*/
+	//float fEvenAngleValue = fAngleCoefficient * static_cast<float>(mnEvenAngleValue);
+	//float fOddAngleValue = fAngleCoefficient * static_cast<float>(mnOddAngleValue);
+	//float fEvenLengthValue = fLengthCoefficient * static_cast<float>(mnEvenLengthValue);
+	//float fOddLengthValue = fLengthCoefficient * static_cast<float>(mnOddLengthValue);
+	////eGenes eIndex = eMutation;
+	//switch (eMutation)
+	//{
+	//case eGenes::ADD_ANGLE_EVEN_BRANCH:
+	//	if (!mnEvenAngleValue)
+	//	{
+	//		fEvenAngleValue += fAngleCoefficient;
+	//	}
+	//	break;
+	//case eGenes::ADD_ANGLE_ODD_BRANCH:
+	//	if (!mnOddAngleValue)
+	//	{
+	//		fOddAngleValue += fAngleCoefficient;
+	//	}
+	//	break;
+	//case eGenes::SUBTRACT_ANGLE_EVEN_BRANCH:
+	//	if (!mnEvenAngleValue)
+	//	{
+	//		fEvenAngleValue -= fAngleCoefficient;
+	//	}
+	//	break;
+	//case eGenes::SUBTRACT_ANGLE_ODD_BRANCH:
+	//	if (!mnOddAngleValue)
+	//	{
+	//		fOddAngleValue -= fAngleCoefficient;
+	//	}
+	//	break;
+	//case eGenes::ADD_LENGTH_EVEN_BIO:
+	//	if (!mnEvenLengthValue)
+	//	{
+	//		fEvenLengthValue += fLengthCoefficient;
+	//	}
+	//	break;
+	//case eGenes::ADD_LENGTH_ODD_BIO:
+	//	if (!mnOddLengthValue)
+	//	{
+	//		fOddLengthValue += fLengthCoefficient;
+	//	}
+	//	break;
+	//case eGenes::SUBTRACT_LENGTH_EVEN_BIO:
+	//	if (!mnEvenLengthValue)
+	//	{
+	//		fEvenLengthValue -= fLengthCoefficient;
+	//	}
+	//	break;
+	//case eGenes::SUBTRACT_LENGTH_ODD_BIO:
+	//	if (!mnOddLengthValue)
+	//	{
+	//		fOddLengthValue -= fLengthCoefficient;
+	//	}
+	//	break;
+	//default:
+	//	break;
+	//}
 
 	//recursiveRenewGraph(mpRootElement, fEvenAngleValue, fOddAngleValue, fEvenLengthValue, fOddLengthValue);
 }
@@ -277,38 +313,45 @@ void BioGraph::recursiveRotateAngle(BioLine* pLine, const float fDegree, const e
 	{
 		BioLine* pParent = pLine->pParent;
 		size_t nParentBranchCount = pParent->GetBranchValue();
-		if (eOddEvenFlag == eODDEVEN::ODD && nParentBranchCount % 2)
+		if (nParentBranchCount)
 		{
 			pLine->RenewPosition();
+			
+			/*if (eOddEvenFlag == eODDEVEN::ODD && nParentBranchCount % 2)
+			{
+				pLine->RenewPosition();
+			}
+			else if (eOddEvenFlag == eODDEVEN::EVEN && !(nParentBranchCount % 2))
+			{
+				pLine->RenewPosition();
+			}*/
 		}
-		else if (eOddEvenFlag == eODDEVEN::EVEN && !(nParentBranchCount % 2))
-		{
-			pLine->RenewPosition();
-		}
-	}
 
-	if (eOddEvenFlag == eODDEVEN::ODD && nBranchCount % 2)
-	{
-		Vector2D& V2LineDirection = pLine->V2Direction;
-		if (pLine->IsRightKid())
+
+
+		if (eOddEvenFlag == eODDEVEN::ODD && nBranchCount % 2)
 		{
-			V2LineDirection.RotateVector(-fDegree);
+			Vector2D& V2LineDirection = pLine->V2Direction;
+			if (pLine->IsRightKid())
+			{
+				V2LineDirection = V2LineDirection.RotateVector(-fDegree);
+			}
+			else
+			{
+				V2LineDirection = V2LineDirection.RotateVector(fDegree);
+			}
 		}
-		else
+		else if (eOddEvenFlag == eODDEVEN::EVEN && !(nBranchCount % 2))
 		{
-			V2LineDirection.RotateVector(fDegree);
-		}
-	}
-	else if (eOddEvenFlag == eODDEVEN::EVEN && !(nBranchCount % 2))
-	{
-		Vector2D& V2LineDirection = pLine->V2Direction;
-		if (pLine->IsRightKid())
-		{
-			V2LineDirection.RotateVector(-fDegree);
-		}
-		else
-		{
-			V2LineDirection.RotateVector(fDegree);
+			Vector2D& V2LineDirection = pLine->V2Direction;
+			if (pLine->IsRightKid())
+			{
+				V2LineDirection = V2LineDirection.RotateVector(-fDegree);
+			}
+			else
+			{
+				V2LineDirection = V2LineDirection.RotateVector(fDegree);
+			}
 		}
 	}
 	if (nullptr != pLine->pLeft)
@@ -321,6 +364,12 @@ void BioGraph::recursiveRotateAngle(BioLine* pLine, const float fDegree, const e
 	}
 	return;
 }
+
+void BioGraph::recursiveExtendLine(BioLine* pLine, const float fLengthValue, const eODDEVEN eOddEvenFlag)
+{
+	return;
+}
+
 
 
 //void BioGraph::recursiveRenewGraph(const float fChangeValue, const eGenes eMutation)

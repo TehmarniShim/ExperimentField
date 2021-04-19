@@ -84,5 +84,8 @@
     <ClCompile Include="WinMain.cpp">
       <Filter>WinMain</Filter>
     </ClCompile>
+    <ClCompile Include="BioLine.cpp">
+      <Filter>BioLine</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

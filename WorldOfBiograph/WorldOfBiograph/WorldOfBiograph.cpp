@@ -13,6 +13,8 @@ WorldOfBiograph::WorldOfBiograph()
     {
         pBio = nullptr;
     }
+
+    
     
 }
 
@@ -35,6 +37,7 @@ WorldOfBiograph::~WorldOfBiograph()
 void WorldOfBiograph::RunMessageLoop()
 {
     MSG msg;
+    
 
     while (GetMessage(&msg, NULL, 0, 0))
     {
@@ -50,6 +53,7 @@ HRESULT WorldOfBiograph::Initialize()
     // Demo device-indpendent resources, such
     // as the Direct2D factory.
     hr = createDeviceIndependentResources();
+    
 
     if (SUCCEEDED(hr))
     {
@@ -106,6 +110,7 @@ HRESULT WorldOfBiograph::Initialize()
 HRESULT WorldOfBiograph::createDeviceIndependentResources()
 {
     HRESULT hr = S_OK;
+   
 
     // Create a Direct2D factory.
     hr = D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &m_pDirect2dFactory);
@@ -184,6 +189,7 @@ void WorldOfBiograph::discardDeviceResources()
 
 HRESULT WorldOfBiograph::OnRender()
 {
+    
     using namespace DirectX;
     HRESULT hr = S_OK;
     hr = createDeviceResources();
@@ -290,9 +296,6 @@ HRESULT WorldOfBiograph::OnRender()
 LRESULT CALLBACK WorldOfBiograph::WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     LRESULT result = 0;
-
-    
-
     if (message == WM_CREATE)
     {
         LPCREATESTRUCT pcs = (LPCREATESTRUCT)lParam;
@@ -355,11 +358,11 @@ LRESULT CALLBACK WorldOfBiograph::WndProc(HWND hwnd, UINT message, WPARAM wParam
             wasHandled = true;
             break;
 
-            case WM_KEYDOWN:
-            {
-                eGenes eMutation;
-                switch (wParam)
-                {
+			case WM_KEYDOWN:
+			{
+				eGenes eMutation;
+				switch (wParam)
+				{
                 case 0x41: //A
                     eMutation = eGenes::ADD_ANGLE_EVEN_BRANCH;
                     break;
@@ -396,7 +399,11 @@ LRESULT CALLBACK WorldOfBiograph::WndProc(HWND hwnd, UINT message, WPARAM wParam
 					eMutation = eGenes::DEFAULT;
 					break;
 				}
-				pDemoApp->mpBioGraph[0]->MakeChange(eMutation);
+                for (auto& pBioGraph : pDemoApp->mpBioGraph)
+                {
+                    pBioGraph->MakeChange(eMutation);
+                }
+
 				pDemoApp->OnRender();
 				wasHandled = true;
 				result = 0;
@@ -415,6 +422,7 @@ LRESULT CALLBACK WorldOfBiograph::WndProc(HWND hwnd, UINT message, WPARAM wParam
 }
 void WorldOfBiograph::OnResize(UINT width, UINT height)
 {
+    
     if (m_pRenderTarget)
     {
         // Note: This method can fail, but it's okay to ignore the
